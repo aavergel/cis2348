@@ -1,3 +1,6 @@
+#Alyza Vergel De Dios
+#ID 2222332
+
 import math
 height = int(input('Enter wall height (feet):\n'))
 width = int(input('Enter wall width (feet):\n'))
