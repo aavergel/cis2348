@@ -1,3 +1,6 @@
+#Alyza Vergel De Dios
+#ID 2222332
+
 userNum1 = int(input('Enter integer:\n'))
 
 print('You entered:', userNum1)
