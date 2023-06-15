@@ -1,0 +1,30 @@
+print(
+'''Davy's auto shop services
+Oil change -- $35
+Tire rotation -- $19
+Car wash -- $7
+Car wax -- $12
+''')
+
+fs = input('Select first service:\n')
+ss = input('Select second service:\n')
+
+services = {'Oil change': 35, 'Tire rotation': 19, 'Car wash': 7, 'Car wax': 12}
+total = 0
+
+print('\nDavy\'s auto shop invoice\n')
+
+if fs == '-':
+    print('Service 1: No service')
+else:
+    if fs in services:
+        print(f'Service 1: {fs}, ${services[fs]}')
+        total += services[fs]
+if ss == '-':
+    print('Service 2: No service')
+else:
+    if ss in services:
+        print(f'Service 2: {ss}, ${services[ss]}')
+        total += services[ss]
+
+print(f'\nTotal: ${total}')
