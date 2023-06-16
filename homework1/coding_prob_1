@@ -1,0 +1,23 @@
+#Alyza Vergel De Dios
+#ID 2222332
+
+cmonth = int(input('Enter current month\n'))
+cday = int(input('Enter current day\n'))
+cyear = int(input('Enter current year\n'))
+
+bmonth = int(input('Enter birthday month\n'))
+bday = int(input('Enter birthday day\n'))
+byear = int(input('Enter birthday year\n'))
+
+if cmonth == bmonth and cday == bday:
+    print('\nHappy Birthday!')
+
+age = 0
+
+for i in range(byear, cyear):
+    age += 1
+if ((bmonth * 30) + bday) > ((cmonth * 30) + cday):
+    age -= 1
+
+print('You are', age, 'years old.')
+
