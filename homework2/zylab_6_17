@@ -1,0 +1,21 @@
+#Alyza Vergel De Dios
+#ID 2222332
+
+user_pass = input()
+password = ''
+
+for i in user_pass:
+    if i == 'i':
+        password += '!'
+    elif i == 'a':
+        password += '@'
+    elif i == 'm':
+        password += 'M'
+    elif i == 'B':
+        password += '8'
+    elif i == 'o':
+        password += '.'
+    else:
+        password += i
+
+print(password + 'q*s')
