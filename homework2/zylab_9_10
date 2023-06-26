@@ -1,0 +1,18 @@
+#Alyza Vergel De Dios
+#ID 2222332
+import csv
+
+file = input()
+contents = []
+counter = []
+with open(file, 'r') as csvfile:
+    csvreader = csv.reader(csvfile)
+    for line in csvreader:
+        for word in line:
+            contents.append(word)
+
+for word in contents:
+    if word not in counter:
+        counter.append(word)
+        freq = contents.count(word)
+        print(word, freq)
