@@ -1,0 +1,31 @@
+# Alyza Vergel De Dios
+# ID 2222332
+
+class FoodItem:
+    def __init__(self, name='None', fat=0.0, carbs=0.0, protein=0.0, num_servings=0.0):
+        self.name = name
+        self.fat = fat
+        self.carbs = carbs
+        self.protein = protein
+        self.num_servings = num_servings
+
+    def get_calories(self, num_servings):
+        # Calorie formula
+        calories = ((self.fat * 9) + (self.carbs * 4) + (self.protein * 4)) * num_servings
+        return calories
+
+    def print_info(self):
+        print('Nutritional information per serving of {}:'.format(self.name))
+        print('   Fat: {:.2f} g'.format(self.fat))
+        print('   Carbohydrates: {:.2f} g'.format(self.carbs))
+        print('   Protein: {:.2f} g'.format(self.protein))
+
+
+food = FoodItem(input(), float(input()), float(input()), float(input()), float(input()))
+none = FoodItem()
+
+none.print_info()
+print(f'Number of calories for {food.num_servings:.2f} serving(s): {none.get_calories(none.num_servings):.2f}\n')
+
+food.print_info()
+print(f'Number of calories for {food.num_servings:.2f} serving(s): {food.get_calories(food.num_servings):.2f}')
