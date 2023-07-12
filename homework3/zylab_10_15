@@ -1,0 +1,26 @@
+# Alyza Vergel De Dios
+# ID 2222332
+
+class Team:
+    def __init__(self):
+        self.teamname = 'none'
+        self.teamwins = 0
+        self.team_losses = 0
+
+    def get_win_percentage(self):
+        percent = self.teamwins / (self.teamwins + self.team_losses)
+        return percent
+
+
+if __name__ == "__main__":
+    team = Team()
+    team.teamname = input()
+    team.teamwins = int(input())
+    team.team_losses = int(input())
+
+    percentage = team.get_win_percentage()
+
+    if percentage >= .5:
+        print(f'Congratulations, Team {team.teamname} has a winning average!')
+    else:
+        print(f'Team {team.teamname} has a losing average.')
