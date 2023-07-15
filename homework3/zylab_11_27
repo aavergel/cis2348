@@ -1,0 +1,60 @@
+# Alyza Vergel De Dios
+# ID 2222332
+jr = [int(input('Enter player 1\'s jersey number:\n')), int(input('Enter player 1\'s rating:\n')),
+      int(input('\nEnter player 2\'s jersey number:\n')), int(input('Enter player 2\'s rating:\n')),
+      int(input('\nEnter player 3\'s jersey number:\n')), int(input('Enter player 3\'s rating:\n')),
+      int(input('\nEnter player 4\'s jersey number:\n')), int(input('Enter player 4\'s rating:\n')),
+      int(input('\nEnter player 5\'s jersey number:\n')), int(input('Enter player 5\'s rating:\n'))]
+
+players = {}
+for x in range(len(jr)):
+    if x == len(jr):
+        break
+    if x % 2 == 0:
+        players[jr[x]] = jr[x + 1]
+
+print('\nROSTER')
+for j, r in sorted(players.items()):
+    print(f'Jersey number: {j}, Rating: {r}')
+
+print('''\nMENU
+a - Add player
+d - Remove player
+u - Update player rating
+r - Output players above a rating
+o - Output roster
+q - Quit''')
+option = input('\nChoose an option:')
+
+while option != 'q':
+    if option == 'a':
+        newj = int(input('\nEnter a new player\'s jersey number:'))
+        newr = int(input('\nEnter the player\'s rating:'))
+        players.update({newj:newr})
+    if option == 'd':
+        rem = int(input('\nEnter a jersey number:'))
+        players.pop(rem)
+    if option == 'u':
+        update = int(input('\nEnter a jersey number:'))
+        players[update] = int(input('\nEnter a new rating for player:'))
+    if option == 'r':
+        rat = int(input('E\nnter a rating:'))
+        print('\nABOVE', rat)
+        for j, r in sorted(players.items()):
+            if r > rat:
+                print(f'Jersey number: {j}, Rating: {r}')
+    if option == 'o':
+        print()
+        print('\nROSTER')
+        for j, r in sorted(players.items()):
+            print(f'Jersey number: {j}, Rating: {r}')
+    print('''\nMENU
+a - Add player
+d - Remove player
+u - Update player rating
+r - Output players above a rating
+o - Output roster
+q - Quit''')
+    option = input('\nChoose an option:')
+else:
+    print()
