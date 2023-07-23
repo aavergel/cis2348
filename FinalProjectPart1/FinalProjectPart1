@@ -1,0 +1,98 @@
+# Alyza Vergel De Dios
+# ID 2222332
+import csv
+import datetime
+
+
+# functions that return custom index for sort key
+def sort_manuf(item_list):
+    return item_list[1]
+
+
+def sort_id(item_list):
+    return item_list[0]
+
+
+def sort_type(item_list):
+    return item_list[2]
+
+
+def sort_date(item_list):
+    return item_list[4]
+
+
+def sort_price(item_list):
+    return item_list[3]
+
+
+def parse_items(f):
+    parsed = []
+    for i in f:
+        parsed.append(i.strip().split(','))
+    return parsed
+
+
+manufacturers = open(input('Enter Manufacturer List'), 'r')
+prices = open(input('Enter Price List'), 'r')
+servdates = open(input('Enter Service Dates List'), 'r')
+parsed_man = parse_items(manufacturers)
+parsed_price = parse_items(prices)
+parsed_date = parse_items(servdates)
+
+other = []  # list of all items based on item_id
+for manuf in parsed_man:
+    other.append(manuf)
+    for price in parsed_price:  # inserting item prices
+        if manuf[0] == price[0]:
+            manuf.insert(3, price[1])
+    for dates in parsed_date:  # inserting item dates
+        if manuf[0] == dates[0]:
+            manuf.insert(4, dates[1])
+
+with open('FullInventory.csv', 'w', newline='') as fullinv:
+    sorted_manuf = sorted(other, key=sort_manuf)
+    writer = csv.writer(fullinv)
+    writer.writerows(sorted_manuf)
+
+with open("DamagedInventory.csv", 'w') as damagedinv:
+    damaged = []  # list of damaged items
+    for prod in other:
+        if prod[5] == 'damaged':
+            damaged.append(prod)
+    sorted_damaged = sorted(damaged, key=sort_price)
+    writer = csv.writer(damagedinv)
+    writer.writerows(sorted_damaged)
+
+typelist = []  # list of created file names
+type_sorted = sorted(other, key=sort_type)
+another = other[:]
+for produ in another:
+    item_type = produ[2]
+    sort_typelist = []  # list of items with same type
+    if produ[2] not in typelist:  # checks if type name has existing file name
+        with open(f'{item_type}Inventory.csv', 'w') as typeinv:
+            for product in type_sorted:
+                if product[2] == item_type:
+                    sort_typelist.append(product)
+            sorted_typelist = sorted(sort_typelist, key=sort_id)
+            writer = csv.writer(typeinv)
+            writer.writerows(sorted_typelist)
+        typelist.append(produ)
+
+today = datetime.datetime.today()
+copyother = other[:]
+with open('PastServiceDateInventory.csv', 'w') as pastdate:
+    past = []  # list of items past date
+    for produc in copyother:
+        produc[4] = datetime.datetime.strptime(produc[4], '%m/%d/%Y')
+        if produc[4] < today:
+            past.append(produc)
+    sorted_past = sorted(past, key=sort_date)
+    for produc in past:
+        produc[4] = produc[4].strftime('%#m/%#d/%Y')
+    writer = csv.writer(pastdate)
+    writer.writerows(sorted_past)
+
+manufacturers.close()
+prices.close()
+servdates.close()
