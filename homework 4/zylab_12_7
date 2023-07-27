@@ -1,0 +1,25 @@
+# Alyza Vergel De Dios
+# 2222332
+
+def get_age():
+    agee = int(input())
+    if agee < 18:
+        raise ValueError('Invalid age.')
+    elif agee > 75:
+        raise ValueError('Invalid age.')
+    return agee
+
+
+def fat_burning_heart_rate(a):
+    heart_rate = .70 * (220 - a)
+    return heart_rate
+
+
+if __name__ == "__main__":
+    try:
+        age = get_age()
+        rate = fat_burning_heart_rate(age)
+        print('Fat burning heart rate for a %s year-old: %s bpm' % (age, rate))
+    except ValueError as excpt:
+        print(excpt)
+        print('Could not calculate heart rate info.\n')
