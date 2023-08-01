@@ -1,0 +1,24 @@
+# Alyza Vergel De Dios
+# 2222332
+
+def selection_sort_descend_trace(selection):
+    for i in range(len(selection) - 1):
+        maxpos = i
+        for j in range(i + 1, len(selection)):
+            if selection[maxpos] < selection[j]:
+                maxpos = j
+
+        temp = selection[i]
+        selection[i] = selection[maxpos]
+        selection[maxpos] = temp
+        
+        for num in selection:
+            print(num, end=' ')
+        print()
+
+
+if __name__ == "__main__":
+    input_list = input().split()
+    num_list = [int(num) for num in input_list]
+
+    selection_sort_descend_trace(num_list)
