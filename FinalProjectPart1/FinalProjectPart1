@@ -1,47 +1,58 @@
 # Alyza Vergel De Dios
 # ID 2222332
-import csv
 import datetime
 
 
-# functions that return custom index for sort key
-def sort_manuf(item_list):
-    return item_list[1]
-
-
-def sort_id(item_list):
-    return item_list[0]
-
-
-def sort_type(item_list):
-    return item_list[2]
-
-
-def sort_date(item_list):
-    return item_list[4]
-
-
-def sort_price(item_list):
-    return item_list[3]
-
-
-def parse_items(f):
+def parse_items(f):  # parse items in csv files
     parsed = []
-    for i in f:
-        parsed.append(i.strip().split(','))
+    for ii in f:
+        parsed.append(ii.strip().split(','))
     return parsed
 
 
-manufacturers = open(input('Enter Manufacturer List'), 'r')
-prices = open(input('Enter Price List'), 'r')
-servdates = open(input('Enter Service Dates List'), 'r')
+def counter(tok):  # counts which words are valid for type and manufacturer
+    type_c = 0
+    manuf_c = 0
+    for items in valid_thngs:
+        if tok == items[1]:
+            type_c += 1
+        elif tok == items[2]:
+            manuf_c += 1
+    return type_c, manuf_c
+
+
+def checker(val):  # checks if type and manufacturer are valid
+    if len(val) > 2:
+        raise ValueError
+    else:
+        types = 0
+        manufs = 0
+        for v in val:
+            for itemv in valid_thngs:
+                if v == itemv[2]:
+                    types += 1
+                    break
+                elif v == itemv[1]:
+                    manufs += 1
+                    break
+        if (types > 1) or (manufs > 1):
+            raise ValueError
+        elif (types < 1) or (manufs < 1):
+            raise ValueError
+        else:
+            return stuff
+
+
+manufacturers = open('ManufacturerList.csv', 'r')
+prices = open('PriceList.csv', 'r')
+servdates = open('ServiceDatesList.csv', 'r')
 parsed_man = parse_items(manufacturers)
 parsed_price = parse_items(prices)
 parsed_date = parse_items(servdates)
 
-other = []  # list of all items based on item_id
+thngs = []  # list of all items based on item_id
 for manuf in parsed_man:
-    other.append(manuf)
+    thngs.append(manuf)
     for price in parsed_price:  # inserting item prices
         if manuf[0] == price[0]:
             manuf.insert(3, price[1])
@@ -49,50 +60,62 @@ for manuf in parsed_man:
         if manuf[0] == dates[0]:
             manuf.insert(4, dates[1])
 
-with open('FullInventory.csv', 'w', newline='') as fullinv:
-    sorted_manuf = sorted(other, key=sort_manuf)
-    writer = csv.writer(fullinv)
-    writer.writerows(sorted_manuf)
+today = datetime.datetime.now()
+brok_thngs = []  # list of damaged items and past service date
+for things in thngs:
+    things[4] = datetime.datetime.strptime(things[4], '%m/%d/%Y')
+    if things[4] < today:
+        brok_thngs.append(things)
+    if things[-1] == 'damaged':
+        brok_thngs.append(things)
 
-with open("DamagedInventory.csv", 'w') as damagedinv:
-    damaged = []  # list of damaged items
-    for prod in other:
-        if prod[5] == 'damaged':
-            damaged.append(prod)
-    sorted_damaged = sorted(damaged, key=sort_price)
-    writer = csv.writer(damagedinv)
-    writer.writerows(sorted_damaged)
+valid_thngs = [x for x in thngs if x not in brok_thngs]  # list of valid items (not damaged/past date)
+for x in valid_thngs:
+    x[4] = x[4].strftime('%#m/%#d/%Y')
 
-typelist = []  # list of created file names
-type_sorted = sorted(other, key=sort_type)
-another = other[:]
-for produ in another:
-    item_type = produ[2]
-    sort_typelist = []  # list of items with same type
-    if produ[2] not in typelist:  # checks if type name has existing file name
-        with open(f'{item_type}Inventory.csv', 'w') as typeinv:
-            for product in type_sorted:
-                if product[2] == item_type:
-                    sort_typelist.append(product)
-            sorted_typelist = sorted(sort_typelist, key=sort_id)
-            writer = csv.writer(typeinv)
-            writer.writerows(sorted_typelist)
-        typelist.append(produ)
+user_input = input('Enter item and manufacturer\n')
+while user_input != 'q':
+    try:
+        tokens = user_input.strip().split()
+        acceptable = []  # list of input
+        for t in tokens:
+            check = counter(t)
+            if check[0] > 0:
+                acceptable.append(t)
+            elif check[1] > 0:
+                acceptable.append(t)
+        stuff = checker(acceptable)
 
-today = datetime.datetime.today()
-copyother = other[:]
-with open('PastServiceDateInventory.csv', 'w') as pastdate:
-    past = []  # list of items past date
-    for produc in copyother:
-        produc[4] = datetime.datetime.strptime(produc[4], '%m/%d/%Y')
-        if produc[4] < today:
-            past.append(produc)
-    sorted_past = sorted(past, key=sort_date)
-    for produc in past:
-        produc[4] = produc[4].strftime('%#m/%#d/%Y')
-    writer = csv.writer(pastdate)
-    writer.writerows(sorted_past)
+        there = False
+        chosen = []  # list of items that match input
+        for item in valid_thngs:
+            if set(stuff).issubset(item):  # checks if valid type and manufacturer is in item
+                there = True
+                chosen.append(item)
+        if not there:
+            raise ValueError
+        else:
+            print('Your item is:', end=' ')
+            highest = chosen[0]             # checks which
+            for x in chosen:                # item in the list
+                if x[3] > highest[3]:       # is the most
+                    highest = x             # expensive
+            for h in highest:               # and prints the
+                print(h, end=' ')           # item
+        consider_other = []  # list of items that match the type input
+        for i in acceptable:
+            for j in valid_thngs:
+                if j[2] == i:
+                    consider_other.append(j)
+        dif = [x for x in consider_other if x not in chosen]  # list of items with diff manufacturer but same type
+        if len(dif) > 0:                                    # if there is item
+            print('\nYou may, also, consider:', end=' ')    # with same type
+            for c in dif:                                   # but diff manufacturer,
+                for a in c:                                 # print these items
+                    print(a, end=' ')
 
-manufacturers.close()
-prices.close()
-servdates.close()
+        user_input = input('\nEnter item and manufacturer\n')
+
+    except (TypeError, ValueError):
+        print('no such item in inventory')
+        user_input = input('\nEnter item and manufacturer\n')
